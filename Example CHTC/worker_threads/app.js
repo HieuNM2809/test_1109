@@ -23,9 +23,9 @@ const tinhToanPhucTap = (data, delay) => {
     });
 };
 
-// Tạo 100 job
+// Tạo 1000 job
 const dataArray = [];
-const desiredLength = 1000;
+const desiredLength = 10000;
 
 for (let i = 0; i < desiredLength; i++) {
     dataArray.push(i);
@@ -39,7 +39,7 @@ const runBatch = async (batchSize, dataArray) => {
 
         const batchPromises = batch.map(data => {
             const delay = Math.random() * 40000 + 20000;  // Random từ 20 giây đến 1 phút
-            return tinhToanPhucTap(data, delay)
+            return tinhToanPhucTap(data, 20000)
                 .then(ketQua => {
                     const logMessage = `Kết quả cho ${data}: ${ketQua}\n`;
                     fs.appendFileSync(path.join(__dirname, 'ketqua.txt'), logMessage, (err) => {

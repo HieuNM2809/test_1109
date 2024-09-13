@@ -7,7 +7,7 @@ const queue = new Queue('example-queue', {
 });
 
 // Tạo và thêm công việc vào hàng đợi
-for (let i = 1; i <= 100; i++) {
+for (let i = 1; i <= 1000; i++) {
     queue.createJob({ number: i })
         .save()
 }

@@ -1,9 +1,7 @@
+const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 const BeeQueue = require('bee-queue');
-const redis = require('redis');
+const fs = require('fs');
 
-// Cấu hình kết nối Redis
-
-// Tạo queue mới
 const queue = new BeeQueue('example-queue', {
     redis: {
         host: '127.0.0.1',
@@ -13,30 +11,55 @@ const queue = new BeeQueue('example-queue', {
     removeOnSuccess: true
 });
 
-// Xử lý job
-queue.process(10, async (job) => {
-    console.log(`Processing job ${job.id} with data: ${JSON.stringify(job.data)}`);
+// Hàm để chạy tính toán phức tạp trong Worker Thread
+function runHeavyComputationInWorker(data) {
+    return new Promise((resolve, reject) => {
+        const worker = new Worker(__filename, { workerData: data });
 
-    // Simulate processing time
-    const delay = Math.random() * 20000 + 20000; // Random delay between 20 and 40 seconds
+        worker.on('message', (result) => {
+            resolve(result);
+            // worker.terminate();  // Giải phóng worker ngay sau khi nhận được kết quả
+        });
+
+        worker.on('error', reject);
+
+        worker.on('exit', (code) => {
+            if (code !== 0) {
+                reject(new Error(`Worker stopped with exit code ${code}`));
+            }
+        });
+    });
+}
+
+// Nếu là Worker, thực hiện công việc tính toán
+if (!isMainThread) {
+    const result = performHeavyComputation(workerData);
+    parentPort.postMessage(result);
+}
+
+// Hàm mô phỏng tính toán phức tạp
+function performHeavyComputation(input) {
     const start = Date.now();
 
+    while (Date.now() - start < input.duration) {
+        // Tính toán phức tạp
+    }
+    return `Tính toán hoàn thành sau ${input.duration}ms`;
+}
+
+// Xử lý job trong luồng chính
+queue.process(10, async (job) => {
     try {
-        // Busy wait to simulate complex computation
-        // while (Date.now() - start < delay) {
-        //     // Simulate heavy computation
-        // }
-        setTimeout(() => {
-            const end = Date.now();
-            console.log(`Job ${job.id} bắt đầu lúc: ${new Date(start).toISOString()}, kết thúc lúc: ${new Date(end).toISOString()}`);
+        const start = Date.now();
 
-            logToFile(`Job ${job.id} bắt đầu lúc: ${new Date(start).toISOString()}, kết thúc lúc: ${new Date(end).toISOString()}`);
+        // Chạy tính toán phức tạp trong Worker Thread
+        const result = await runHeavyComputationInWorker({ duration: 20000 });
+        const end = Date.now();
 
-        }, delay);
+        const logMessage = `Job ${JSON.stringify(job.data)} bắt đầu lúc: ${new Date(start).toISOString()}, kết thúc lúc: ${new Date(end).toISOString()}, Kết quả: ${result}`;
+        await fs.promises.appendFile('logs/queue.log', logMessage + '\n');  // Ghi log không đồng bộ
 
-        // const end = Date.now();
-        // console.log(`Job ${job.id} bắt đầu lúc: ${new Date(start).toISOString()}, kết thúc lúc: ${new Date(end).toISOString()}`);
     } catch (err) {
-        console.error(`Job ${job.id} failed with error: ${err.message}`);
+        console.error(`Job ${job.id} thất bại với lỗi: ${err.message}`);
     }
 });
