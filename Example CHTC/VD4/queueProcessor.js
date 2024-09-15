@@ -17,9 +17,13 @@ function runHeavyComputationInWorker(receiverWardId, pickupLocationId) {
         const worker = new Worker('./app/Workers/worker.js', {workerData: {receiverWardId, pickupLocationId}});
 
         worker.on('message', (result) => {
+            worker.terminate();
             resolve(result);
         });
-        worker.on('error', reject);
+        worker.on('error', (error) => {
+            worker.terminate(); // Kết thúc Worker khi có lỗi
+            reject(error);
+        });
 
         worker.on('exit', (code) => {
             if (code !== 0) {
@@ -30,7 +34,7 @@ function runHeavyComputationInWorker(receiverWardId, pickupLocationId) {
 }
 
 // Xử lý job trong luồng chính
-queue.process(1, async (job) => {
+queue.process(5, async (job) => {
     try {
         const start = Date.now();
 
@@ -48,6 +52,8 @@ queue.process(1, async (job) => {
         await fs.promises.appendFile('./storage/logs/job_logs.txt', logMessage + '\n');
 
     } catch (err) {
-        console.error(`Job ${job.id} thất bại với lỗi: ${err.message}`);
+        const logMessage = `Job ${JSON.stringify(job.data)}  thất bại với lỗi: ${err.message}, Ket Qua : ${JSON.stringify(transShipmentId || 0)}`;
+        await fs.promises.appendFile('./storage/logs/job_logs_errors.txt', logMessage + '\n');
+
     }
 });

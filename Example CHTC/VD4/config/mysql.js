@@ -2,10 +2,10 @@ module.exports.option = {
     host: 'localhost',
     dialect: 'mysql',
     pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000,
+        max: 50,      // Maximum number of connections in pool
+        min: 0,       // Minimum number of connections in pool
+        acquire: 30000, // Maximum time (in ms) to wait for a connection
+        idle: 10000,   // Time (in ms) before a connection is considered idle
     },
     retry: {
         // match: [/Deadlock/i, /Connection lost/i],
