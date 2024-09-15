@@ -1,22 +1,10 @@
-// // Hàm mô phỏng tính toán phức tạp
-// function performHeavyComputation(input) {
-//     const start = Date.now();
-//
-//     console.log(input)
-//     // while (Date.now() - start < input.duration) {
-//     //     // Tính toán phức tạp
-//     // }
-//     // return `Tính toán hoàn thành sau ${input.duration}ms`;
-// }
-//
-// module.exports = { performHeavyComputation };
+const calculateKilometerByCoordinate = require('../Helpers/calculateKilometerByCoordinate.helper')
 
-
-const PickupLocation = require('../models/pickupLocation');
-const Ward = require('../models/ward');
-const PickupLocationDistance = require('../models/pickupLocationDistance');
-const WardDistance = require('../models/wardDistance');
-const Setting = require('../models/setting');
+// const PickupLocation = require('../models/pickupLocation');
+// const Ward = require('../models/ward');
+// const PickupLocationDistance = require('../models/pickupLocationDistance');
+// const WardDistance = require('../models/wardDistance');
+// const Setting = require('../models/setting');
 
 class FindTransshipmentPointService {
     static L_MIN = 4;
@@ -24,10 +12,12 @@ class FindTransshipmentPointService {
     static ONE_KM = 1;
 
     constructor() {
-        // Khởi tạo mô hình và dịch vụ cần thiết
     }
 
-    async execute(receiverWardId, pickupLocationId) {
+    async execute(workerData) {
+
+        let {receiverWardId, pickupLocationId} = workerData;
+
         const positionA = await PickupLocation.findByPk(pickupLocationId);
         const positionO = await Ward.findByPk(receiverWardId);
 
@@ -198,8 +188,3 @@ class FindTransshipmentPointService {
 }
 
 module.exports = FindTransshipmentPointService;
-
-// Helper function to calculate distance by coordinates
-function calculateKilometerByCoordinate(lon1, lat1, lon2, lat2) {
-    // Implementation of distance calculation here
-}

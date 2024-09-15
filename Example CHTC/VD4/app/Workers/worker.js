@@ -1,8 +1,14 @@
 const { parentPort, workerData } = require('worker_threads');
-const { performHeavyComputation } = require('../Services/transShipments.service');
+const FindTransshipmentPointService = require('../Services/transShipments.service');
 
 // Nếu là Worker, thực hiện công việc tính toán
 if (parentPort) {
-    const result = performHeavyComputation(workerData);
-    parentPort.postMessage(result);
+    (async () => {
+        try {
+            const result = await (new FindTransshipmentPointService()).execute(workerData);
+            parentPort.postMessage(result);
+        } catch (error) {
+            parentPort.postMessage({ error: error.message });
+        }
+    })();
 }
