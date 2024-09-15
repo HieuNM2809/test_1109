@@ -2,10 +2,11 @@
 function performHeavyComputation(input) {
     const start = Date.now();
 
-    while (Date.now() - start < input.duration) {
-        // Tính toán phức tạp
-    }
-    return `Tính toán hoàn thành sau ${input.duration}ms`;
+    console.log(input)
+    // while (Date.now() - start < input.duration) {
+    //     // Tính toán phức tạp
+    // }
+    // return `Tính toán hoàn thành sau ${input.duration}ms`;
 }
 
 module.exports = { performHeavyComputation };

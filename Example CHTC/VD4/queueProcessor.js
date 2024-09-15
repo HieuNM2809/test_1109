@@ -34,7 +34,7 @@ queue.process(10, async (job) => {
         const start = Date.now();
 
         // Chạy tính toán phức tạp trong Worker Thread
-        const result = await runHeavyComputationInWorker({ duration: 10000 });
+        const result = await runHeavyComputationInWorker(job.data);
         const end = Date.now();
 
         const logMessage = `Job ${JSON.stringify(job.data)} bắt đầu lúc: ${new Date(start).toISOString()}, kết thúc lúc: ${new Date(end).toISOString()}, Kết quả: ${result}`;
