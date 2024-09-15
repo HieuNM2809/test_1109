@@ -1,13 +1,11 @@
 const BeeQueue = require('bee-queue');
 const fs = require('fs');
 const { Worker } = require('worker_threads');
+const redisConfig = require('./config/redis')
 
 // Cấu hình BeeQueue
-const queue = new BeeQueue('example-queue', {
-    redis: {
-        host: '127.0.0.1',
-        port: 6379
-    },
+const queue = new BeeQueue('transShipments', {
+    redis: redisConfig,
     isWorker: true,
     removeOnSuccess: true
 });
@@ -15,12 +13,11 @@ const queue = new BeeQueue('example-queue', {
 // Hàm để chạy tính toán phức tạp trong Worker Thread
 function runHeavyComputationInWorker(data) {
     return new Promise((resolve, reject) => {
-        const worker = new Worker('./worker.js', { workerData: data });
+        const worker = new Worker('./app/Workers/worker.js', { workerData: data });
 
         worker.on('message', (result) => {
             resolve(result);
         });
-
         worker.on('error', reject);
 
         worker.on('exit', (code) => {
@@ -41,7 +38,7 @@ queue.process(10, async (job) => {
         const end = Date.now();
 
         const logMessage = `Job ${JSON.stringify(job.data)} bắt đầu lúc: ${new Date(start).toISOString()}, kết thúc lúc: ${new Date(end).toISOString()}, Kết quả: ${result}`;
-        await fs.promises.appendFile('job_logs.txt', logMessage + '\n');  // Ghi log không đồng bộ
+        await fs.promises.appendFile('./storage/logs/job_logs.txt', logMessage + '\n');  // Ghi log không đồng bộ
 
     } catch (err) {
         console.error(`Job ${job.id} thất bại với lỗi: ${err.message}`);
