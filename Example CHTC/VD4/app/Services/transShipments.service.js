@@ -1,15 +1,14 @@
 const calculateKilometerByCoordinate = require('../Helpers/calculateKilometerByCoordinate.helper')
-
-// const PickupLocation = require('../models/pickupLocation');
-// const Ward = require('../models/ward');
-// const PickupLocationDistance = require('../models/pickupLocationDistance');
-// const WardDistance = require('../models/wardDistance');
-// const Setting = require('../models/setting');
+const PickupLocation = require('../Models/PickupLocation.model');
+const Ward = require('../Models/Ward.model');
+const PickupLocationDistance = require('../Models/PickupLocationDistance.model');
+const WardDistance = require('../Models/wardDistance.model');
 
 class FindTransshipmentPointService {
     static L_MIN = 4;
     static L_MAX = 6;
     static ONE_KM = 1;
+    static RADIUS = 5;
 
     constructor() {
     }
@@ -21,6 +20,10 @@ class FindTransshipmentPointService {
         const positionA = await PickupLocation.findByPk(pickupLocationId);
         const positionO = await Ward.findByPk(receiverWardId);
 
+        console.log(positionA, positionO);
+        return;
+
+
         if (!positionA || !positionO) return [];
 
         const wardDistances = await WardDistance.findAll();
@@ -30,7 +33,7 @@ class FindTransshipmentPointService {
 
         const radius = positionA.pickup_radius > 0
             ? positionA.pickup_radius
-            : parseInt((await Setting.findOne({ where: { setting_name: 'pickup-radius' } }) || {}).setting_value || 0);
+            : FindTransshipmentPointService.RADIUS;
 
         const distanceAO = await this.getPickupLocationToWardDistance(positionA.id, positionO.id, wardDistances, pickupLocations, wards);
 

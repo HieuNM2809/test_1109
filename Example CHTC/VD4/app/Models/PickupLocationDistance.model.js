@@ -1,5 +1,5 @@
 const {DataTypes} = require('sequelize');
-const sequelize = require('../database');
+const sequelize = require('../../lib/database');
 
 // Định nghĩa model PickupLocationDistance cho bảng pickup_location_distances
 const PickupLocationDistance = sequelize.define('PickupLocationDistance', {

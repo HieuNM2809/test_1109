@@ -8,3 +8,6 @@ Job {"number":7} bắt đầu lúc: 2024-09-15T09:03:23.021Z, kết thúc lúc: 
 Job {"number":6} bắt đầu lúc: 2024-09-15T09:03:23.020Z, kết thúc lúc: 2024-09-15T09:03:33.050Z, Kết quả: Tính toán hoàn thành sau 10000ms
 Job {"number":9} bắt đầu lúc: 2024-09-15T09:03:23.025Z, kết thúc lúc: 2024-09-15T09:03:33.051Z, Kết quả: Tính toán hoàn thành sau 10000ms
 Job {"number":10} bắt đầu lúc: 2024-09-15T09:03:23.027Z, kết thúc lúc: 2024-09-15T09:03:33.053Z, Kết quả: Tính toán hoàn thành sau 10000ms
+Job {"ward_id":25780,"pickup_location_id":71,"distance":98203,"reverse_distance":96404} bắt đầu lúc: 2024-09-15T15:48:21.298Z, kết thúc lúc: 2024-09-15T15:48:21.576Z,  Kết quả: undefined
+Job {"ward_id":25780,"pickup_location_id":76,"distance":94990,"reverse_distance":96085} bắt đầu lúc: 2024-09-15T15:48:21.581Z, kết thúc lúc: 2024-09-15T15:48:21.819Z,  Kết quả: undefined
+Job {"ward_id":25780,"pickup_location_id":79,"distance":97219,"reverse_distance":96616} bắt đầu lúc: 2024-09-15T15:48:21.821Z, kết thúc lúc: 2024-09-15T15:48:22.059Z,  Kết quả: undefined

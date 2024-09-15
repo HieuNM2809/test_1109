@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../database');
+const sequelize = require('../../lib/database');
 
 // Định nghĩa model Ward cho bảng wards
 const Ward = sequelize.define('Ward', {
