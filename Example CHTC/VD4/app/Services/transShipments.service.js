@@ -1,14 +1,17 @@
+const {Op} = require('sequelize');
 const calculateKilometerByCoordinate = require('../Helpers/calculateKilometerByCoordinate.helper')
 const PickupLocation = require('../Models/PickupLocation.model');
 const Ward = require('../Models/Ward.model');
 const PickupLocationDistance = require('../Models/PickupLocationDistance.model');
 const WardDistance = require('../Models/wardDistance.model');
+const CacheHelper = require('../Helpers/cache.helper');
 
 class FindTransshipmentPointService {
     static L_MIN = 4;
     static L_MAX = 6;
     static ONE_KM = 1;
     static RADIUS = 5;
+    static ACTIVE = 1;
 
     constructor() {
     }
@@ -20,16 +23,40 @@ class FindTransshipmentPointService {
         const positionA = await PickupLocation.findByPk(pickupLocationId);
         const positionO = await Ward.findByPk(receiverWardId);
 
-        console.log(positionA, positionO);
-        return;
-
-
         if (!positionA || !positionO) return [];
 
-        const wardDistances = await WardDistance.findAll();
-        const pickupLocationDistances = await PickupLocationDistance.findAll();
-        const wards = await Ward.findAll();
-        const pickupLocations = await PickupLocation.findAll();
+        const wardDistances = await CacheHelper.getCachedData('wardDistances', WardDistance);
+        const pickupLocationDistances = await CacheHelper.getCachedData('pickupLocationDistances', PickupLocationDistance);
+        const wards = await CacheHelper.getCachedData('wards', Ward, {
+            where: {
+                longitude: {
+                    [Op.not]: null
+                },
+                latitude: {
+                    [Op.not]: null
+                }
+            }
+        });
+        const pickupLocations = await CacheHelper.getCachedData('pickupLocations', PickupLocation, {
+            where: {
+                status: FindTransshipmentPointService.ACTIVE,
+                type: FindTransshipmentPointService.ACTIVE,
+                longitude: {
+                    [Op.not]: null
+                },
+                latitude: {
+                    [Op.not]: null
+                },
+                deleted_at: {
+                    [Op.is]: null
+                }
+            }
+        });
+
+
+        return 1;
+
+
 
         const radius = positionA.pickup_radius > 0
             ? positionA.pickup_radius
