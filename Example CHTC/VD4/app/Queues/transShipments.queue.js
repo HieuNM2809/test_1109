@@ -1,8 +1,8 @@
 const Queue = require('bee-queue');
 const redisConfig = require('../../config/redis');
 
-const queue = new Queue('transShipments', {
+const transShipmentsQueue = new Queue('transShipments', {
     redis: redisConfig,
 });
 
-module.exports = queue;
+module.exports = transShipmentsQueue;

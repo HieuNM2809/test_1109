@@ -1,12 +1,10 @@
 const Queue = require('bee-queue');
 const redisConfig = require('../../../config/redis');
-const queue = new Queue('transShipments', {
-    redis: redisConfig
-});
+const transShipmentsQueue = require('../../Queues/transShipments.queue')
 
 // Tạo và thêm công việc vào hàng đợi
 for (let i = 1; i <= 1000; i++) {
-    queue.createJob({number: i})
+    transShipmentsQueue.createJob({number: i})
         .save()
 }
 

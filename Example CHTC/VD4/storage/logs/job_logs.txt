@@ -1,0 +1,10 @@
+Job {"number":1} bắt đầu lúc: 2024-09-15T09:03:23.009Z, kết thúc lúc: 2024-09-15T09:03:33.037Z, Kết quả: Tính toán hoàn thành sau 10000ms
+Job {"number":3} bắt đầu lúc: 2024-09-15T09:03:23.014Z, kết thúc lúc: 2024-09-15T09:03:33.042Z, Kết quả: Tính toán hoàn thành sau 10000ms
+Job {"number":4} bắt đầu lúc: 2024-09-15T09:03:23.016Z, kết thúc lúc: 2024-09-15T09:03:33.042Z, Kết quả: Tính toán hoàn thành sau 10000ms
+Job {"number":5} bắt đầu lúc: 2024-09-15T09:03:23.018Z, kết thúc lúc: 2024-09-15T09:03:33.044Z, Kết quả: Tính toán hoàn thành sau 10000ms
+Job {"number":2} bắt đầu lúc: 2024-09-15T09:03:23.013Z, kết thúc lúc: 2024-09-15T09:03:33.045Z, Kết quả: Tính toán hoàn thành sau 10000ms
+Job {"number":8} bắt đầu lúc: 2024-09-15T09:03:23.023Z, kết thúc lúc: 2024-09-15T09:03:33.049Z, Kết quả: Tính toán hoàn thành sau 10000ms
+Job {"number":7} bắt đầu lúc: 2024-09-15T09:03:23.021Z, kết thúc lúc: 2024-09-15T09:03:33.050Z, Kết quả: Tính toán hoàn thành sau 10000ms
+Job {"number":6} bắt đầu lúc: 2024-09-15T09:03:23.020Z, kết thúc lúc: 2024-09-15T09:03:33.050Z, Kết quả: Tính toán hoàn thành sau 10000ms
+Job {"number":9} bắt đầu lúc: 2024-09-15T09:03:23.025Z, kết thúc lúc: 2024-09-15T09:03:33.051Z, Kết quả: Tính toán hoàn thành sau 10000ms
+Job {"number":10} bắt đầu lúc: 2024-09-15T09:03:23.027Z, kết thúc lúc: 2024-09-15T09:03:33.053Z, Kết quả: Tính toán hoàn thành sau 10000ms

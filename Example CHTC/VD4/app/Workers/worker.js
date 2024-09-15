@@ -1,5 +1,5 @@
 const { parentPort, workerData } = require('worker_threads');
-const { performHeavyComputation } = require('../Service/transShipments.service');
+const { performHeavyComputation } = require('../Services/transShipments.service');
 
 // Nếu là Worker, thực hiện công việc tính toán
 if (parentPort) {
