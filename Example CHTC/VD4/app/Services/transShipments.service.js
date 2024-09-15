@@ -23,7 +23,7 @@ class FindTransshipmentPointService {
         const positionA = await PickupLocation.findByPk(pickupLocationId);
         const positionO = await Ward.findByPk(receiverWardId);
 
-        if (!positionA || !positionO) return [];
+        if (!positionA || !positionO) return null;
 
         const wardDistances = await CacheHelper.getCachedData('wardDistances', WardDistance);
         const pickupLocationDistances = await CacheHelper.getCachedData('pickupLocationDistances', PickupLocationDistance);
@@ -53,32 +53,27 @@ class FindTransshipmentPointService {
             }
         });
 
-
-        return 1;
-
-
-
         const radius = positionA.pickup_radius > 0
             ? positionA.pickup_radius
             : FindTransshipmentPointService.RADIUS;
 
         const distanceAO = await this.getPickupLocationToWardDistance(positionA.id, positionO.id, wardDistances, pickupLocations, wards);
 
-        if (distanceAO <= radius) return [];
+        if (distanceAO <= radius) return null;
 
         const positionB = await this.getNearestPickupLocationByWard(receiverWardId, wardDistances, pickupLocations, wards);
         const distanceAB = await this.getDistance(positionA.id, positionB.id, pickupLocationDistances, pickupLocations, wards);
 
-        if (distanceAB <= FindTransshipmentPointService.L_MIN || positionA.id === positionB.id) return [];
+        if (distanceAB <= FindTransshipmentPointService.L_MIN || positionA.id === positionB.id) return null;
 
         if (distanceAB > FindTransshipmentPointService.L_MIN && distanceAB < FindTransshipmentPointService.L_MAX) {
-            if (distanceAO <= distanceAB) return [];
+            if (distanceAO <= distanceAB) return null;
 
             const distanceBO = await this.getPickupLocationToWardDistance(positionB.id, positionO.id, wardDistances, pickupLocations, wards);
             if (distanceBO <= FindTransshipmentPointService.ONE_KM && (distanceAO > FindTransshipmentPointService.L_MIN && distanceAO < FindTransshipmentPointService.L_MAX)) {
-                return [];
+                return null;
             } else {
-                return [positionB];
+                return positionB.id;
             }
         }
 
@@ -93,7 +88,7 @@ class FindTransshipmentPointService {
             wards
         );
 
-        if (positionX) return [positionX];
+        if (positionX) return positionX.id;
 
         let lMaxPlus = FindTransshipmentPointService.L_MAX;
         while (lMaxPlus <= distanceAO) {
@@ -115,14 +110,15 @@ class FindTransshipmentPointService {
             if (positionY) {
                 const distanceAY = await this.getDistance(positionA.id, positionY.id, pickupLocationDistances, pickupLocations, wards);
                 if (distanceAY < distanceAO) {
-                    return [positionY];
+                    return positionY.id;
                 }
             }
         }
 
-        return [];
+        return null;
     }
 
+    //R
     async getNearestPickupLocationByWard(wardId, wardDistances, pickupLocations, wards) {
         let minDistance = Infinity;
         let nearestPickupLocationId = 0;
@@ -144,6 +140,7 @@ class FindTransshipmentPointService {
         return pickupLocationsFiltered.find(loc => loc.id === nearestPickupLocationId);
     }
 
+    // R
     async getDistance(fromLocationId, toLocationId, pickupLocationDistances, pickupLocations, wards) {
         const pickupLocationDistance = pickupLocationDistances.find(item => item.from_location_id === fromLocationId && item.to_location_id === toLocationId);
 
@@ -166,6 +163,7 @@ class FindTransshipmentPointService {
         return Math.round(distance / 1000);
     }
 
+    //R
     async getPickupLocationToWardDistance(pickupLocationId, wardId, wardDistances, pickupLocations, wards) {
         const wardDistance = wardDistances.find(item => item.ward_id === wardId && item.pickup_location_id === pickupLocationId);
 
